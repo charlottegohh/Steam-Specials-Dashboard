@@ -3,10 +3,16 @@ def scrape_steam():
     from selenium.webdriver.common.by import By
     from webdriver_manager.chrome import ChromeDriverManager
     from selenium.webdriver.chrome.service import Service
+    from selenium.webdriver.chrome.options import Options
     import time
 
-    #setup browser
-    driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()))
+    #run in headless mode
+    options = Options()
+    options.add_argument('--headless')
+    options.add_argument('--no-sandbox')
+    options.add_argument('--disable-dev-shm-usage')
+
+    driver = webdriver.Chrome(options=options)
 
     #open steam specials page
     url = "https://store.steampowered.com/search/?specials=1"
