@@ -2,7 +2,6 @@ def scrape_steam():
     from selenium import webdriver
     from selenium.webdriver.common.by import By
     from webdriver_manager.chrome import ChromeDriverManager
-    from chromedriver_py import binary_path
     from selenium.webdriver.chrome.service import Service
     from selenium.webdriver.chrome.options import Options
     import time
@@ -13,8 +12,7 @@ def scrape_steam():
     options.add_argument('--no-sandbox')
     options.add_argument('--disable-dev-shm-usage')
 
-    service = Service(executable_path=binary_path)
-    driver = webdriver.Chrome(service=service, options=options)
+    driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=options)
 
     #open steam specials page
     url = "https://store.steampowered.com/search/?specials=1"
