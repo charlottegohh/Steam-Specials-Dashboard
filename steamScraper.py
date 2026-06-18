@@ -1,48 +1,25 @@
-def scrape_steam(): 
-    from selenium import webdriver
-    from selenium.webdriver.common.by import By
-    from webdriver_manager.chrome import ChromeDriverManager
-    from selenium.webdriver.chrome.service import Service
-    from selenium.webdriver.chrome.options import Options
-    import time
+def scrape_steam():
+    import requests
+    from bs4 import BeautifulSoup
 
-    #run in headless mode
-    options = Options()
-    options.add_argument('--headless')
-    options.add_argument('--no-sandbox')
-    options.add_argument('--disable-dev-shm-usage')
-    options.add_argument('--disable-gpu')
-    options.add_argument('--window-size=1280,720')
-    options.add_argument('--single-process')
-    options.add_argument('--memory-pressure-off')
-    options.binary_location = '/usr/bin/chromium'
-
-    service = Service('/usr/bin/chromedriver')
-    driver = webdriver.Chrome(service=service, options=options)
-
-    #open steam specials page
     url = "https://store.steampowered.com/search/?specials=1"
-    driver.get(url)
+    headers = {
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"
+    }
 
-    #wait for page to load
-    time.sleep(5)
+    response = requests.get(url, headers=headers)
+    soup = BeautifulSoup(response.text, "html.parser")
 
-    #add scrolling
-    for _ in range(3):
-        driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
-        time.sleep(2)
-
-    #find all game elements
-    games = driver.find_elements(By.CLASS_NAME, "search_result_row")
+    games = soup.find_all("a", class_="search_result_row")
 
     data = []
 
-    for game in games[:50]: #limit to first 50
+    for game in games[:50]:
         try:
-            title = game.find_element(By.CLASS_NAME, "title").text
-            original_price = game.find_element(By.CLASS_NAME, "discount_original_price").text
-            discount = game.find_element(By.CLASS_NAME, "discount_pct").text
-            price = game.find_element(By.CLASS_NAME, "discount_final_price").text
+            title = game.find(class_="title").text
+            discount = game.find(class_="discount_pct").text
+            original_price = game.find(class_="discount_original_price").text
+            price = game.find(class_="discount_final_price").text
 
             data.append({
                 "title": title,
@@ -54,5 +31,4 @@ def scrape_steam():
             print("Error:", e)
             continue
 
-    driver.quit()
     return data
