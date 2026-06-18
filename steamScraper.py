@@ -11,8 +11,10 @@ def scrape_steam():
     options.add_argument('--headless')
     options.add_argument('--no-sandbox')
     options.add_argument('--disable-dev-shm-usage')
+    options.binary_location = '/usr/bin/chromium'
 
-    driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=options)
+    service = Service('/usr/bin/chromedriver')
+    driver = webdriver.Chrome(service=service, options=options)
 
     #open steam specials page
     url = "https://store.steampowered.com/search/?specials=1"
