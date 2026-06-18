@@ -11,7 +11,6 @@ def scrape_steam():
     options.add_argument('--headless')
     options.add_argument('--no-sandbox')
     options.add_argument('--disable-dev-shm-usage')
-    options.binary_location = '/usr/bin/chromium'
 
     driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=options)
 
