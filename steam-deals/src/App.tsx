@@ -3,7 +3,13 @@ import axios from 'axios'
 import { ArrowUpDown } from 'lucide-react'
 
 function App(){
-  const[deals, setDeals] = useState([])
+  type Deal = {
+    title: string
+    discount: string
+    original_price: string
+    price: string
+  }
+  const[deals, setDeals] = useState<Deal[]>([])
   const[loading, setLoading] = useState(false)
   const[sortDirection, setSortDirection] = useState('asc')
   
